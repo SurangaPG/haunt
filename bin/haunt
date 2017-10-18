@@ -1,0 +1,29 @@
+#!/usr/bin/env php
+
+<?php
+
+// Include the composer autoloader
+$projectAutoload = dirname(dirname(dirname(dirname(__FILE__)))) . '/autoload.php';
+
+if(file_exists($projectAutoload)) {
+  require $projectAutoload;
+}
+elseif(file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
+  require dirname(__DIR__) . '/vendor/autoload.php';
+}
+else {
+  echo "composer autoloader not found \n";
+  exit(1);
+}
+
+try {
+  $application = new \surangapg\Haunt\HauntApplication();
+}
+catch(\Exception $e) {
+  echo $e->getMessage() . "\n";
+  exit;
+}
+
+$application->run();
+
+
