@@ -5,6 +5,7 @@
  */
 namespace surangapg\Haunt\Component;
 
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -61,8 +62,8 @@ class Discovery {
     $this->setRootDir($rootDir);
     $this->setChangedSince($changedSince);
 
-    if (!isset($outputInterface)) {
-      $outputInterface = new BufferOutput();
+    if (!isset($output)) {
+      $output = new BufferedOutput();
     }
     $this->setOutput($output);
   }
