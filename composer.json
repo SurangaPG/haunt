@@ -1,0 +1,17 @@
+{
+  "name": "surangapg/haunt",
+  "authors": [
+    {
+      "name": "Suranga Panagamuwa Gamage",
+      "email": "suranga@webct.be"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "surangapg\\Haunt\\": "src"
+    }
+  },
+  "require": {
+
+  }
+}
