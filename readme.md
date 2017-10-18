@@ -1,4 +1,4 @@
-# Haunt (aplha)
+# Haunt (WIP)
 
 Note that the implementation is currently being ported. 
 
