@@ -6,6 +6,7 @@
  */
 namespace surangapg\Haunt\Component;
 
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Comparison {
@@ -21,9 +22,16 @@ class Comparison {
    * @param string[] $folders
    *   An array of folders with files that should be compared. Note that all
    *   The folders should have a current.png and a baseline.png file.
+   * @param \Symfony\Component\Console\Output\OutputInterface|NULL $output
+   *   Output interface to handle the displaying of the output.
    */
   public function __construct(array $folders, OutputInterface $output = null) {
     $this->setFolders($folders);
+
+    if (!isset($output)) {
+      $output = new BufferedOutput();
+    }
+    $this->setOutput($output);
   }
 
   /**
@@ -32,6 +40,9 @@ class Comparison {
   public function compare() {
 
     // @TODO Validate the existance of the compare imagemagick function here.
+
+    $this->getOutput()->writeln('');
+    $this->getOutput()->writeln('<fg=white>Running comparison for images</>');
 
     foreach ($this->getFolders() as $folder) {
       $this->compareFolder($folder);
@@ -48,6 +59,8 @@ class Comparison {
    */
   public function compareFolder($fileDir) {
 
+    $this->getOutput()->writeln(sprintf(' comparing images in %s', $fileDir), OutputInterface::VERBOSITY_NORMAL);
+
     $baseline = $fileDir . "/baseline.png";
     $current = $fileDir . "/current.png";
 
@@ -55,9 +68,12 @@ class Comparison {
     list($baselineWidth, $baselineHeight) = getimagesize($baseline);
     list($currentWidth, $currentHeight) = getimagesize($current);
 
-    if ($baselineWidth != $currentWidth || $baselineHeight != $baselineHeight) {
+    $this->getOutput()->writeln(sprintf(' baseline.png: %sx%s', $baselineWidth, $baselineHeight), OutputInterface::VERBOSITY_DEBUG);
+    $this->getOutput()->writeln(sprintf(' current.png %sx%s', $currentWidth, $currentHeight), OutputInterface::VERBOSITY_DEBUG);
 
-      // @TODO Add logging for size mismatch as compare doesn't support this.
+    if ($baselineWidth != $currentWidth || $baselineHeight != $currentHeight) {
+
+      $this->getOutput()->writeln('<fg=red>Image dimensions do not match, skipping</>');
 
       return;
     }
@@ -68,6 +84,29 @@ class Comparison {
     // @TODO Add this to the report once it is available.
     $diffPercentage = $this->calcDiffPercentage($output[0], ['width' => $baselineWidth, 'height' => $baselineHeight]);
 
+    $this->getOutput()->writeln(sprintf(' Difference: %s', $this->formatPercentage($diffPercentage)));
+  }
+
+  /**
+   * Add a color to an output percentage.
+   *
+   * @param float $diffPercentage
+   *   The difference in percent.
+   *
+   * @return string
+   *   String wrapped in a pretty color.
+   */
+  protected function formatPercentage(float $diffPercentage) {
+
+    if($diffPercentage < 2) {
+      return '<fg=green>' . round($diffPercentage, 2) . '%</>';
+    }
+    elseif($diffPercentage < 10) {
+      return '<fg=yellow>' . round($diffPercentage, 2) . '%</>';
+    }
+    else {
+      return '<fg=red>' . round($diffPercentage, 2) . '%</>';
+    }
   }
 
   /**

@@ -5,6 +5,7 @@
 
 namespace surangapg\Haunt\Command;
 
+use surangapg\Haunt\Component\Comparison;
 use surangapg\Haunt\Component\Discovery;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,7 +30,20 @@ class CompareCommand extends Command {
     $sourceDir = $input->getOption('source');
 
     $discovery = new Discovery($sourceDir, null, null, $output);
-    $discovery->discover();
+    $folders = $discovery->discover();
+
+    if (count($folders) == 0) {
+      $output->writeln('No valid items found for comparison. Aborting.');
+      $output->writeln('');
+      return;
+    }
+
+    // Otherwise start comparing images.
+    $comparison = new Comparison($folders, $output);
+    $comparison->compare();
+
+    $output->writeln('');
+    $output->writeln('<fg=white>Completed comparison.</>');
   }
 
 }
