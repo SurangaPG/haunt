@@ -26,8 +26,16 @@ To compare screenshots the following dir structure is required.
                     - baseline.png
 ```
 
-Afterwards you can run haunt and a new file "diff.png" will be added. 
+Afterwards you can run haunt and a new file "diff.png" will be added highlighting 
+the differences between the 2 files. 
 
 ``` 
     ./vendor/bin/haunt compare --source=WHEREVER
 ```
+
+## Roadmap
+
+- Add Basic implementation for taking screenshots (via headless browser).
+- Add integration for gherkin based making of screenshots (behat)
+- Add report collecting/writing to the comparison run. 
+- Add Basic UI for the displaying of the results.
