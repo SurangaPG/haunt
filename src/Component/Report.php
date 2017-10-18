@@ -9,7 +9,7 @@ namespace surangapg\Haunt\Report;
  * Class Report
  *
  * Basic implementation for a report class that collects all the data about
- * the
+ * the comparisons.
  *
  * @package surangapg\Haunt\Component
  */
