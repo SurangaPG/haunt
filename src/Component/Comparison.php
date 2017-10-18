@@ -59,7 +59,7 @@ class Comparison {
    */
   public function compareFolder($fileDir) {
 
-    $this->getOutput()->writeln(sprintf(' comparing images in %s', $fileDir), OutputInterface::VERBOSITY_NORMAL);
+    $this->getOutput()->writeln(sprintf(' Comparing images in %s', $fileDir), OutputInterface::VERBOSITY_NORMAL);
 
     $baseline = $fileDir . "/baseline.png";
     $current = $fileDir . "/current.png";
