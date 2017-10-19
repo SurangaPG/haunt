@@ -22,8 +22,8 @@ To compare screenshots the following dir structure is required.
 ``` 
     WHEREVER/group-name
                 /screenshot-set-name
-                    - current.png
                     - baseline.png
+                    - new.png
 ```
 
 Afterwards you can run haunt and a new file "diff.png" will be added highlighting 

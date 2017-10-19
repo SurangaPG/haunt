@@ -115,9 +115,9 @@ class Discovery {
     }
 
     // A "current" file needs to exist or the folder can be passed over.
-    if (!file_exists($folder . '/current.png')) {
+    if (!file_exists($folder . '/new.png')) {
       $passed = FALSE;
-      $this->getOutput()->write('  No current.png found in folder', OutputInterface::VERBOSITY_VERY_VERBOSE);
+      $this->getOutput()->write('  No new.png found in folder', OutputInterface::VERBOSITY_VERY_VERBOSE);
     }
 
     $treshHold = $this->getChangedSince();

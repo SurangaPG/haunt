@@ -74,14 +74,14 @@ class Comparison {
     $this->getOutput()->writeln(sprintf(' Comparing images in %s', $fileDir), OutputInterface::VERBOSITY_NORMAL);
 
     $baseline = $fileDir . "/baseline.png";
-    $current = $fileDir . "/current.png";
+    $current = $fileDir . "/new.png";
 
     // Validate that the baseline and the current file are equal in size.
     list($baselineWidth, $baselineHeight) = getimagesize($baseline);
     list($currentWidth, $currentHeight) = getimagesize($current);
 
     $this->getOutput()->writeln(sprintf(' baseline.png: %sx%s', $baselineWidth, $baselineHeight), OutputInterface::VERBOSITY_DEBUG);
-    $this->getOutput()->writeln(sprintf(' current.png %sx%s', $currentWidth, $currentHeight), OutputInterface::VERBOSITY_DEBUG);
+    $this->getOutput()->writeln(sprintf(' new.png %sx%s', $currentWidth, $currentHeight), OutputInterface::VERBOSITY_DEBUG);
 
     if ($baselineWidth != $currentWidth || $baselineHeight != $currentHeight) {
 
