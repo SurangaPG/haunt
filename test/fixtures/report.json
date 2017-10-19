@@ -1,0 +1,10 @@
+{
+    "startTime": 1508396466,
+    "endTime": 1508396467,
+    "records": [
+        {
+            "folder": "/Users/suranga/tools/haunt/test/fixtures/group-behat-output/mobile",
+            "diff": 12.21
+        }
+    ]
+}

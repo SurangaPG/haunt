@@ -17,6 +17,11 @@ class Comparison {
   protected $folders;
 
   /**
+   * @var Report
+   */
+  protected $report;
+
+  /**
    * Comparison constructor.
    *
    * @param string[] $folders
@@ -24,14 +29,21 @@ class Comparison {
    *   The folders should have a current.png and a baseline.png file.
    * @param \Symfony\Component\Console\Output\OutputInterface|NULL $output
    *   Output interface to handle the displaying of the output.
+   * @param \surangapg\Haunt\Component\Report $report
+   *   Report for this run.
    */
-  public function __construct(array $folders, OutputInterface $output = null) {
+  public function __construct(array $folders, OutputInterface $output = null, Report $report = null) {
     $this->setFolders($folders);
 
     if (!isset($output)) {
       $output = new BufferedOutput();
     }
     $this->setOutput($output);
+
+    if (!isset($report)) {
+      $report = new Report();
+    }
+    $this->setReport($report);
   }
 
   /**
@@ -74,6 +86,7 @@ class Comparison {
     if ($baselineWidth != $currentWidth || $baselineHeight != $currentHeight) {
 
       $this->getOutput()->writeln('<fg=red>Image dimensions do not match, skipping</>');
+      $this->getReport()->addError($fileDir, "Image dimensions did not match, skipping");
 
       return;
     }
@@ -85,6 +98,7 @@ class Comparison {
     $diffPercentage = $this->calcDiffPercentage($output[0], ['width' => $baselineWidth, 'height' => $baselineHeight]);
 
     $this->getOutput()->writeln(sprintf(' Difference: %s', $this->formatPercentage($diffPercentage)));
+    $this->getReport()->addRecord($fileDir, $diffPercentage);
   }
 
   /**
@@ -148,4 +162,17 @@ class Comparison {
     $this->output = $output;
   }
 
+  /**
+   * @return \surangapg\Haunt\Component\Report
+   */
+  public function getReport() {
+    return $this->report;
+  }
+
+  /**
+   * @param $report
+   */
+  public function setReport(Report $report) {
+    $this->report = $report;
+  }
 }

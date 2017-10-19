@@ -19,7 +19,7 @@ class CompareCommand extends Command {
    */
   protected function configure() {
     $this->setName('compare')
-      ->addOption('source', NULL, InputOption::VALUE_REQUIRED, 'The directory where the source files are located.', 'artifact')
+      ->addOption('source', NULL, InputOption::VALUE_REQUIRED, 'The directory where the source files are located.', getcwd() . '/haunt/snapshots')
       ->setDescription('Compare all the different screenshots for the project.');
   }
 
@@ -41,6 +41,12 @@ class CompareCommand extends Command {
     // Otherwise start comparing images.
     $comparison = new Comparison($folders, $output);
     $comparison->compare();
+
+    // Write out the report.
+    $jsonFile = fopen($sourceDir . '/report.json', "w") or die("Unable to open file!");
+    $txt = json_encode($comparison->getReport()->getData(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    fwrite($jsonFile, $txt);
+    fclose($jsonFile);
 
     $output->writeln('');
     $output->writeln('<fg=white>Completed comparison.</>');
