@@ -25,13 +25,31 @@ class SnapshotSeleniumCommand extends Command {
   protected $domain;
 
   /**
+   * @var string
+   */
+  protected $targetFile;
+
+  /**
+   * @var string
+   */
+  protected $outputDir;
+
+  /**
+   * Configuration for the snapshot run.
+   *
+   * @var array
+   */
+  protected $config = [];
+
+  /**
    * @inheritdoc
    */
   protected function configure() {
     $this->setName('snapshots:selenium')
+      ->addOption('config', NULL, InputOption::VALUE_REQUIRED, 'The configuration file to use.')
       ->addOption('domain', NULL, InputOption::VALUE_REQUIRED, 'The domain to take the snapshots from.')
       ->addOption('target', NULL, InputOption::VALUE_REQUIRED, 'The type of snapshots to make (either baseline or new).', 'new')
-      ->addOption('output', NULL, InputOption::VALUE_REQUIRED, 'The base location for the generated snapshots.', getcwd() . '/haunt/snapshots')
+      ->addOption('output-dir', NULL, InputOption::VALUE_REQUIRED, 'The base location for the generated snapshots.', getcwd() . '/haunt/snapshots')
       ->setDescription('Use a selenium browser to produce a set of snapshots based on a yml config file.');
   }
 
@@ -45,17 +63,22 @@ class SnapshotSeleniumCommand extends Command {
       throw new \Exception("Selenium driver is not active. Try are you sure it was installed and is running properly? Run 'selenium-server -p 4444' if installed via brew. This is best done in a different terminal window since it's a java application that runs in the background.");
     }
 
-    $domain = rtrim($input->getOption('domain'), '/');
-    $this->setDomain($domain);
+    $domain = $input->getOption('domain');
+    if (!isset($domain)) {
+      throw new \Exception('Domain option is required.');
+    }
 
-  }
+    $target = $input->getOption('target');
+    if (!isset($target)) {
+      throw new \Exception('Target option is required.');
+    }
 
-  /**
-   * @inheritdoc
-   */
-  public function execute(InputInterface $input, OutputInterface $output) {
+    $outputDir = $input->getOption('output-dir');
 
-    $info = [
+    $configFile = $input->getOption('config');
+
+    // Add loading of the file here.
+    $config = [
       'name' => 'testing-123',
       'sizes' => [
         'mobile' => [
@@ -67,6 +90,27 @@ class SnapshotSeleniumCommand extends Command {
         '/'
       ]
     ];
+
+    if (!isset($config['name'])) {
+      $config['name'] = base64_encode($configFile);
+    }
+
+    if (!isset($config['paths'])) {
+      throw new \Exception('No "paths" key found in the configuration file. This should be a set of key/value pairs name => path');
+    }
+
+    $this->setConfig($config);
+    $this->setOutputDir($outputDir);
+    $this->setTargetFile($target . '.png');
+    $this->setDomain($domain);
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function execute(InputInterface $input, OutputInterface $output) {
+
+    $info = $this->getConfig();
 
     $fullPaths = $info['paths'];
     $domain = $this->getDomain();
@@ -80,12 +124,12 @@ class SnapshotSeleniumCommand extends Command {
 
     if (isset($info['sizes'])) {
       foreach ($info['sizes'] as $variant => $resolution) {
-        $outputDir = getcwd() . '/testing/' . $info['name'] . '--' . $variant;
+        $outputDir = $this->getOutputDir() . $info['name'] . '--' . $variant;
         $snapshotSets[] = new Snapshot($fullPaths, 'new.png', $outputDir, $output, $resolution);
       }
     }
     else {
-      $outputDir = getcwd() . '/testing/' . $info['name'];
+      $outputDir = $this->getOutputDir() . $info['name'];
       $snapshotSets[] = new Snapshot($fullPaths, 'new.png', $outputDir, $output);
     }
 
@@ -135,6 +179,48 @@ class SnapshotSeleniumCommand extends Command {
    * @param string $domain
    */
   public function setDomain(string $domain) {
-    $this->domain = $domain;
+    $this->domain = rtrim($domain, '/');
+  }
+
+  /**
+   * @return string
+   */
+  public function getTargetFile() {
+    return $this->targetFile;
+  }
+
+  /**
+   * @param string $targetFile
+   */
+  public function setTargetFile(string $targetFile) {
+    $this->targetFile = $targetFile;
+  }
+
+  /**
+   * @return string
+   */
+  public function getOutputDir() {
+    return $this->outputDir;
+  }
+
+  /**
+   * @param string $outputDir
+   */
+  public function setOutputDir(string $outputDir) {
+    $this->outputDir = rtrim($outputDir, '/') . '/';
+  }
+
+  /**
+   * @return array
+   */
+  public function getConfig() {
+    return $this->config;
+  }
+
+  /**
+   * @param array $config
+   */
+  public function setConfig(array $config) {
+    $this->config = $config;
   }
 }
