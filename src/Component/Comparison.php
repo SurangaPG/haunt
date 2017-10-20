@@ -22,6 +22,11 @@ class Comparison {
   protected $report;
 
   /**
+   * @var OutputInterface
+   */
+  protected $output;
+
+  /**
    * Comparison constructor.
    *
    * @param string[] $folders
