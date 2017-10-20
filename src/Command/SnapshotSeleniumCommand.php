@@ -11,6 +11,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Yaml;
 
 class SnapshotSeleniumCommand extends Command {
 
@@ -78,18 +79,7 @@ class SnapshotSeleniumCommand extends Command {
     $configFile = $input->getOption('config');
 
     // Add loading of the file here.
-    $config = [
-      'name' => 'testing-123',
-      'sizes' => [
-        'mobile' => [
-          'width' => 600,
-          'height' => 1200,
-        ]
-      ],
-      'paths' => [
-        '/'
-      ]
-    ];
+    $config = Yaml::parse(file_get_contents($configFile));
 
     if (!isset($config['name'])) {
       $config['name'] = base64_encode($configFile);
@@ -124,13 +114,19 @@ class SnapshotSeleniumCommand extends Command {
 
     if (isset($info['sizes'])) {
       foreach ($info['sizes'] as $variant => $resolution) {
+        $groupInfo = [
+          'id' => $info['name'] . '--' . $variant,
+        ];
         $outputDir = $this->getOutputDir() . $info['name'] . '--' . $variant;
-        $snapshotSets[] = new Snapshot($fullPaths, 'new.png', $outputDir, $output, $resolution);
+        $snapshotSets[] = new Snapshot($fullPaths, $this->getTargetFile(), $outputDir, $output, $groupInfo, $resolution);
       }
     }
     else {
       $outputDir = $this->getOutputDir() . $info['name'];
-      $snapshotSets[] = new Snapshot($fullPaths, 'new.png', $outputDir, $output);
+      $groupInfo = [
+        'id' => $info['name'],
+      ];
+      $snapshotSets[] = new Snapshot($fullPaths, $this->getTargetFile(), $outputDir, $output, $groupInfo);
     }
 
     foreach ($snapshotSets as $snapshotSet) {

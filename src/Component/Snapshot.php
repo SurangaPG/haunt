@@ -9,6 +9,8 @@ use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Session;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class Snapshot
@@ -29,7 +31,7 @@ class Snapshot {
    *
    * @var int[]
    */
-  protected $resolution = [1200, 600];
+  protected $resolution = ['width' => 1200, 'height' => 600];
 
   /**
    * The target file to use (usually either baseline.png or new.png).
@@ -53,6 +55,11 @@ class Snapshot {
   protected $outputDir;
 
   /**
+   * @var array
+   */
+  protected $groupInfo;
+
+  /**
    * Discovery constructor.
    *
    * @param string[] $paths
@@ -60,15 +67,19 @@ class Snapshot {
    * @param string $target
    *   Target name for the files.
    * @param string $outputDir
-   *
+   *   The directory to save the data to.
+   * @param \Symfony\Component\Console\Output\OutputInterface|NULL $output
+   *   Output interface to handle the messages.
+   * @param string[] $groupInfo
+   *   Extra information for the snapshot set.
    * @param int[]|NULL $resolution
    *   Array of width and height.
-   *
    */
-  public function __construct(array $paths, string $target, string $outputDir, OutputInterface $output = null, array $resolution = null) {
+  public function __construct(array $paths, string $target, string $outputDir, OutputInterface $output = null, array $groupInfo = [],  array $resolution = null) {
 
     $this->setPaths($paths);
     $this->setTarget($target);
+    $this->setOutputDir($outputDir);
 
     if (isset($resolution)) {
       $this->setResolution($resolution);
@@ -78,7 +89,9 @@ class Snapshot {
       $output = new BufferedOutput();
     }
     $this->setOutput($output);
-  }
+
+    $this->setGroupInfo($groupInfo);
+}
 
   /**
    * Make snapshots for all the items locations.
@@ -87,16 +100,54 @@ class Snapshot {
     $session = new Session(new Selenium2Driver());
     $session->start();
 
-    $session->resizeWindow($this->resolution['width'], $this->resolution['height']);
+    $fs = new Filesystem();
 
+    $groupInfo = $this->getGroupInfo();
+
+    if (!empty($groupInfo)) {
+      $fs->dumpFile($this->outputDir . '/_haunt-info.yml', Yaml::dump(['group' => $groupInfo]));
+    }
+
+    // Add group meta information.
+    $session->resizeWindow($this->resolution['width'], $this->resolution['height']);
     foreach ($this->getPaths() as $index => $path) {
 
       $this->getOutput()->writeln(sprintf('  Visiting <fg=green>%s</> at <fg=green>%s</>x<fg=green>%s</>', $path, $this->resolution['width'], $this->resolution['height']));
       $session->visit($path);
       $screenShot = $session->getScreenshot();
+
+      $folder = $this->outputDir .  $index;
+      $fs->mkdir($folder);
+      $fileName = $folder . '/' . $this->getTarget();
+
+      $this->getOutput()->writeln('    Making snapshot', OutputInterface::VERBOSITY_VERY_VERBOSE);
+      file_put_contents($folder . '/' . $this->getTarget(), $screenShot);
+      passthru('convert ' . $fileName . ' -gravity north-west  -extent ' . $this->resolution['width'] . 'x' . $this->resolution['height'] . ' ' . $fileName);
+
+      // Add meta information.
+      $this->getOutput()->writeln('    Writing meta info', OutputInterface::VERBOSITY_VERY_VERBOSE);
+      $metaFileName = $folder . '/_haunt-info.yml';
+      $metaInfo = [
+        'url' => $path,
+      ];
+      $fs->dumpFile($metaFileName, Yaml::dump($metaInfo));
     }
 
     $session->stop();
+  }
+
+  /**
+   * @param string $outputDir
+   */
+  public function setOutputDir(string $outputDir) {
+    $this->outputDir = rtrim($outputDir, '/') . '/';
+  }
+
+  /**
+   * @return string
+   */
+  public function getOutputDir() {
+    return $this->outputDir;
   }
 
   /**
@@ -141,12 +192,31 @@ class Snapshot {
     $this->output = $output;
   }
 
+  /**
+   * @return string
+   */
   public function getTarget() {
     return $this->target;
   }
 
-  public function setTarget($target) {
+  /**
+   * @param string $target
+   */
+  public function setTarget(string $target) {
     $this->target = $target;
   }
 
+  /**
+   * @return array
+   */
+  public function getGroupInfo() {
+    return $this->groupInfo;
+  }
+
+  /**
+   * @param array $groupInfo
+   */
+  public function setGroupInfo(array $groupInfo) {
+    $this->groupInfo = $groupInfo;
+  }
 }

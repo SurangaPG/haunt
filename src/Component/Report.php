@@ -20,6 +20,9 @@ class Report {
    */
   protected $startTime;
 
+  /**
+   * @var array
+   */
   protected $records = [];
 
   /**
@@ -37,9 +40,19 @@ class Report {
    *   Folder that was validated.
    * @param float $diffPercent
    *   Percentage difference detected.
+   * @param array $info
+   *   Additional information to be added to the array.
    */
-  public function addRecord(string $folder, float $diffPercent) {
-    $this->records[] = [
+  public function addRecord(string $folder, float $diffPercent, array $info = []) {
+
+    $this->addDefaultData($info, $folder);
+
+    $record = [
+      'folder' => $folder,
+      'diff' => $diffPercent,
+    ];
+
+    $this->records[$info['group']['id']][] = [
       'folder' => $folder,
       'diff' => $diffPercent,
     ];
@@ -52,16 +65,24 @@ class Report {
    *   Folder that was validated.
    * @param string $error
    *   The error message.
+   * @param array $info
+   *   Additional information to be added to the array.
    */
-  public function addError(string $folder, string $error) {
-    $this->records[] = [
+  public function addError(string $folder, string $error, array $info = []) {
+
+    $this->addDefaultData($info, $folder);
+
+    $this->records[$info['group']['id']][] = [
       'folder' => $folder,
       'error' => $error,
     ];
   }
 
   /**
+   * Get all the data that was collected.
    *
+   * @return array
+   *   All the collected data.
    */
   public function getData() {
     return [
@@ -70,5 +91,18 @@ class Report {
       'endTime' => time(),
       'records' => $this->records,
     ];
+  }
+
+  /**
+   * Adds default data to the info array.
+   *
+   * @param array $info
+   *  Array with extra info about a record.
+   */
+  protected function addDefaultData(array &$info, string $folder) {
+
+    if (!isset($info['group']['id'])) {
+      $info['group']['id'] = base64_encode(dirname($folder));
+    }
   }
 }

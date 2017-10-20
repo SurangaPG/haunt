@@ -1,0 +1,7 @@
+name: 'testing-123'
+sizes:
+  mobile:
+    width: 600
+    height: 1200
+paths:
+  - '/'

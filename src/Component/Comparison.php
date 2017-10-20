@@ -86,7 +86,7 @@ class Comparison {
     if ($baselineWidth != $currentWidth || $baselineHeight != $currentHeight) {
 
       $this->getOutput()->writeln('<fg=red>Image dimensions do not match, skipping</>');
-      $this->getReport()->addError($fileDir, "Image dimensions did not match, skipping");
+      $this->getReport()->addError($fileDir, "Image dimensions did not match, skipping", $this->generateInfo($fileDir));
 
       return;
     }
@@ -98,7 +98,35 @@ class Comparison {
     $diffPercentage = $this->calcDiffPercentage($output[0], ['width' => $baselineWidth, 'height' => $baselineHeight]);
 
     $this->getOutput()->writeln(sprintf(' Difference: %s', $this->formatPercentage($diffPercentage)));
-    $this->getReport()->addRecord($fileDir, $diffPercentage);
+
+    $this->getReport()->addRecord($fileDir, $diffPercentage, $this->generateInfo($fileDir));
+  }
+
+  /**
+   * Add metadata contained in the info files in the filesystem.
+   *
+   * @param string $fileDir
+   *   The directory the file is in.
+   *
+   * @return array
+   *   Additional information loaded from the filesystem.
+   */
+  protected function generateInfo(string $fileDir) {
+
+    $info = [];
+
+    if (file_exists($fileDir . "/_haunt-info.yml")) {
+      $info = [];
+    }
+
+    if (file_exists(dirname($fileDir) . "/_haunt-info.yml")) {
+      $groupInfo = [
+
+      ];
+      $info = array_merge_recursive($info, $groupInfo);
+    }
+
+    return $info;
   }
 
   /**

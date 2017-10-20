@@ -1,10 +1,18 @@
 {
-    "startTime": 1508396466,
-    "endTime": 1508396467,
-    "records": [
-        {
-            "folder": "/Users/suranga/tools/haunt/test/fixtures/group-behat-output/mobile",
-            "diff": 12.21
-        }
-    ]
+    "startTime": 1508523655,
+    "endTime": 1508523656,
+    "records": {
+        "L1VzZXJzL3N1cmFuZ2EvdG9vbHMvaGF1bnQvdGVzdC9maXh0dXJlcy9ncm91cC1iZWhhdC1vdXRwdXQ=": [
+            {
+                "folder": "/Users/suranga/tools/haunt/test/fixtures/group-behat-output/mobile",
+                "diff": 12.21
+            }
+        ],
+        "L1VzZXJzL3N1cmFuZ2EvdG9vbHMvaGF1bnQvdGVzdC9maXh0dXJlcy90ZXN0aW5nLTEyMy0tbW9iaWxl": [
+            {
+                "folder": "/Users/suranga/tools/haunt/test/fixtures/testing-123--mobile/0",
+                "diff": 0
+            }
+        ]
+    }
 }
