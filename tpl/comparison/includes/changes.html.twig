@@ -1,0 +1,18 @@
+<div>
+  <div>
+    <section>
+      <div class="panel panel-default"
+           data-new="{{ path.folder }}/baseline.png"
+           data-current="{{ path.folder }}/new.png"
+      >
+        <div class="panel-heading">
+          <span>Difference: {{ path.diff }}%</span>
+          <button data-action="display-wrapper-screenshot-detail" class="btn btn-xs -flag">Show screenshots</button>
+        </div>
+        <div class="panel-body">
+          <img class="resolutionset-image" src="{{ path.relativePath }}/diff.png">
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+  <h1>Visual regression - Comparison reports</h1>
+
+  {% for id, group in records %}
+    {% include "includes/group.html.twig" with {"group": group, "id": id } %}
+  {% endfor %}
+
+{% endblock %}
+

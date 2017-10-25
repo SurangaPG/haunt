@@ -47,12 +47,10 @@ class Report {
 
     $this->addDefaultData($info, $folder);
 
-    $record = [
-      'folder' => $folder,
-      'diff' => $diffPercent,
-    ];
+    // @TODO Make the report cleaner by having an add a singular addGroup.
+    $this->records[$info['group']['id']]['info'] = $info['group'];
 
-    $this->records[$info['group']['id']][] = [
+    $this->records[$info['group']['id']]['paths'][] = [
       'folder' => $folder,
       'diff' => $diffPercent,
     ];
@@ -71,6 +69,9 @@ class Report {
   public function addError(string $folder, string $error, array $info = []) {
 
     $this->addDefaultData($info, $folder);
+
+    // @TODO Make the report cleaner by having an add a singular addGroup.
+    $this->records[$info['group']['id']]['info'] = $info['group'];
 
     $this->records[$info['group']['id']][] = [
       'folder' => $folder,

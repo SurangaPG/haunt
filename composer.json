@@ -16,7 +16,8 @@
     "behat/mink": "^1.7",
     "behat/mink-selenium2-driver": "^1.3",
     "symfony/yaml": "^3.3",
-    "symfony/filesystem": "^3.3"
+    "symfony/filesystem": "^3.3",
+    "twig/twig": "^2.0"
   },
   "bin": [
     "bin/haunt"

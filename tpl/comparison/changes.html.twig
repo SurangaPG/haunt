@@ -1,0 +1,8 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+  {% for path in group.paths %}
+    {% include "includes/changes.html.twig" with {"path": path} %}
+  {% endfor %}
+{% endblock %}
+

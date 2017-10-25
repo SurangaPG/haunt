@@ -1,18 +1,29 @@
 {
-    "startTime": 1508523655,
-    "endTime": 1508523656,
+    "startTime": 1508964430,
+    "endTime": 1508964431,
     "records": {
-        "L1VzZXJzL3N1cmFuZ2EvdG9vbHMvaGF1bnQvdGVzdC9maXh0dXJlcy9ncm91cC1iZWhhdC1vdXRwdXQ=": [
-            {
-                "folder": "/Users/suranga/tools/haunt/test/fixtures/group-behat-output/mobile",
-                "diff": 12.21
-            }
-        ],
-        "L1VzZXJzL3N1cmFuZ2EvdG9vbHMvaGF1bnQvdGVzdC9maXh0dXJlcy90ZXN0aW5nLTEyMy0tbW9iaWxl": [
-            {
-                "folder": "/Users/suranga/tools/haunt/test/fixtures/testing-123--mobile/0",
-                "diff": 0
-            }
-        ]
+        "L1VzZXJzL3N1cmFuZ2EvdG9vbHMvaGF1bnQvdGVzdC9maXh0dXJlcy9ncm91cC1iZWhhdC1vdXRwdXQ=": {
+            "info": {
+                "id": "L1VzZXJzL3N1cmFuZ2EvdG9vbHMvaGF1bnQvdGVzdC9maXh0dXJlcy9ncm91cC1iZWhhdC1vdXRwdXQ="
+            },
+            "paths": [
+                {
+                    "folder": "/Users/suranga/tools/haunt/test/fixtures/group-behat-output/mobile",
+                    "diff": 12.21
+                }
+            ]
+        },
+        "testing-123--mobile": {
+            "info": {
+                "id": "testing-123--mobile",
+                "description": "Check all the special pages."
+            },
+            "paths": [
+                {
+                    "folder": "/Users/suranga/tools/haunt/test/fixtures/testing-123--mobile/0",
+                    "diff": 4.17
+                }
+            ]
+        }
     }
 }

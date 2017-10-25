@@ -8,6 +8,7 @@ namespace surangapg\Haunt\Component;
 
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Yaml;
 
 class Comparison {
 
@@ -56,7 +57,7 @@ class Comparison {
    */
   public function compare() {
 
-    // @TODO Validate the existance of the compare imagemagick function here.
+    // @TODO Validate the existence of the compare imagemagick function here.
 
     $this->getOutput()->writeln('');
     $this->getOutput()->writeln('<fg=white>Running comparison for images</>');
@@ -99,12 +100,11 @@ class Comparison {
     $diff = $fileDir . "/diff.png";
     exec("compare -dissimilarity-threshold 1 -fuzz 0% -metric AE -highlight-color red $baseline $current $diff 2>&1 ", $output);
 
-    // @TODO Add this to the report once it is available.
     $diffPercentage = $this->calcDiffPercentage($output[0], ['width' => $baselineWidth, 'height' => $baselineHeight]);
+    $this->getReport()->addRecord($fileDir, $diffPercentage, $this->generateInfo($fileDir));
 
     $this->getOutput()->writeln(sprintf(' Difference: %s', $this->formatPercentage($diffPercentage)));
 
-    $this->getReport()->addRecord($fileDir, $diffPercentage, $this->generateInfo($fileDir));
   }
 
   /**
@@ -121,13 +121,11 @@ class Comparison {
     $info = [];
 
     if (file_exists($fileDir . "/_haunt-info.yml")) {
-      $info = [];
+      $info = Yaml::parse(file_get_contents($fileDir . "/_haunt-info.yml"));
     }
 
     if (file_exists(dirname($fileDir) . "/_haunt-info.yml")) {
-      $groupInfo = [
-
-      ];
+      $groupInfo = Yaml::parse(file_get_contents(dirname($fileDir) . "/_haunt-info.yml"));
       $info = array_merge_recursive($info, $groupInfo);
     }
 
