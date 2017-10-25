@@ -72,7 +72,7 @@ class Html {
     }
 
     // @TODO Yield this?
-    foreach ($this->outputGenerator->generateHtml($this->reportData) as $location => $data) {
+    foreach ($this->outputGenerator->generateHtml($this->reportData, $outputDir) as $location => $data) {
       $this->output->writeln(sprintf('  Writing to %s', $location . '.html'));
       $fs->dumpFile($outputDir . $location . '.html', $data);
     }
