@@ -14,10 +14,52 @@ command (compare) allows you to compare any sets of files on your filesystem
 regardless of the source. 
 
 ### Providing screenshots
-WIP, currently no basic implementation exists. (but one will be added). 
+Currently a basic implementation for the taking of screenshots has been 
+provider using a selenium2 (tested with the official docker image) instance. This can be run via: 
+
+It requires a --config options pointing to a simple .yml file (currently only accepts an absolute path). 
+See test/config.yml for an example.
+
+And a domain to visit e.g https://stedelijkonderwijs.be. 
+
+Optionally an output dir can be provided.
+
+To switch output file use the --target=new or --target=baseline options.
+
+``` 
+./path/to/bin snapshots:selenium --config=/PATH/TO/CONFIG/FILE.yml --domain=https://stedelijkonderwijs.be
+
+```
+
+Initially you'll have to run this twice once with domain for the the baseline content (for example production).
+Once with the domain for comparison (for example acc). 
+
+Afterwards you'll have a similar set of files:
+
+``` 
+ /OUTPUTPATH
+    /group-name
+        /0
+            - _haunt-info.yml
+            - baseline.png
+            - new.png
+        /1
+            - _haunt-info.yml
+            - baseline.png
+            - new.png
+        /2
+            - _haunt-info.yml
+            - baseline.png
+            - new.png
+``` 
+
+Note that this is just a base implementation, any screenshots in this 
+filesystem structure are eligible. 
+
+More groups can be added in the same way. 
 
 ### Comparing screenshots
-To compare screenshots the following dir structure is required. 
+To compare screenshots the following dir structure is required.
 
 ``` 
     WHEREVER/group-name
@@ -28,14 +70,27 @@ To compare screenshots the following dir structure is required.
 
 Afterwards you can run haunt and a new file "diff.png" will be added highlighting 
 the differences between the 2 files. 
+Also a report.json file will have been made in the source dir (this can 
+then be uses by any output generator). 
 
 ``` 
     ./vendor/bin/haunt compare --source=WHEREVER
 ```
 
+## Statis html generator 
+As a base implementation a very basic POC for a static html generator 
+has been added. (Will be expanded further). 
+
+``` 
+    ./vendor/bin/haunt generate-html --source=/ABSOLUTE/PATH/TO/REPORT.json --target=/ABSOLUTE/PATH/TO/OUTPUT/DIR
+```
+
+This will generate a set of (currently very basic html files to display
+the screenshots.
+
 ## Roadmap
 
-- Add Basic implementation for taking screenshots (via headless browser).
+- Allow temporary paths
 - Add integration for gherkin based making of screenshots (behat)
-- Add report collecting/writing to the comparison run. 
-- Add Basic UI for the displaying of the results.
+- Improve UI for the results
+- Improve report handling
