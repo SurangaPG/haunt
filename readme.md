@@ -84,7 +84,7 @@ then be uses by any output generator).
     ./vendor/bin/haunt compare --source=WHEREVER
 ```
 
-## Statis html generator 
+## Static html generator 
 As a base implementation a very basic POC for a static html generator 
 has been added. (Will be expanded further). 
 
