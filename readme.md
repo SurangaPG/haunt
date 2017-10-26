@@ -18,11 +18,7 @@ regardless of the source.
 ### Providing screenshots
 Currently a basic implementation for the taking of screenshots has been 
 provider using a selenium2 (tested with the official docker image) instance. 
-Temporary docker container should suffice: 
-``` 
- docker run -p 4444:4444 -p 5900:5900 --rm selenium/standalone-firefox-debug:2.53.1-beryllium
-``` 
-See https://github.com/SeleniumHQ/docker-selenium
+This should be running before starting the compare command (see further).
 
 It requires a --config options pointing to a simple .yml file (currently only accepts an absolute path). 
 See test/config.yml for an example.
@@ -36,7 +32,14 @@ To switch output file use the --target=new or --target=baseline options.
 ``` 
 ./path/to/bin snapshots:selenium --config=/PATH/TO/CONFIG/FILE.yml --domain=https://stedelijkonderwijs.be
 ```
-Or have this running on port 4444 some other way.
+
+Temporary docker container should suffice: 
+``` 
+ docker run -d -p 4444:4444 -p 5900:5900 --rm selenium/standalone-firefox-debug:2.53.1-beryllium
+``` 
+See https://github.com/SeleniumHQ/docker-selenium
+Or have this running on port 4444 some other way. (don't forget to stop it afterwards).
+See the docker documentation for more info.
 
 Initially you'll have to run this twice once with domain for the the baseline content (for example production).
 Once with the domain for comparison (for example acc). 
