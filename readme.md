@@ -61,7 +61,7 @@ Afterwards you'll have a similar set of files:
 ``` 
 
 Note that this is just a base implementation, any screenshots in this 
-filesystem structure are eligible. 
+filesystem structure are valid. 
 
 More groups can be added in the same way. 
 
