@@ -1,5 +1,7 @@
 # Haunt (WIP)
 
+Note that you'll need imagemagick installed.
+
 Note that the implementation is currently being ported. 
 
 Haunt is a php equivalent for wraith to prevent having too many different
@@ -15,7 +17,12 @@ regardless of the source.
 
 ### Providing screenshots
 Currently a basic implementation for the taking of screenshots has been 
-provider using a selenium2 (tested with the official docker image) instance. This can be run via: 
+provider using a selenium2 (tested with the official docker image) instance. 
+Temporary docker container should suffice: 
+``` 
+ docker run -p 4444:4444 -p 5900:5900 --rm selenium/standalone-firefox-debug:2.53.1-beryllium
+``` 
+See https://github.com/SeleniumHQ/docker-selenium
 
 It requires a --config options pointing to a simple .yml file (currently only accepts an absolute path). 
 See test/config.yml for an example.
@@ -28,8 +35,8 @@ To switch output file use the --target=new or --target=baseline options.
 
 ``` 
 ./path/to/bin snapshots:selenium --config=/PATH/TO/CONFIG/FILE.yml --domain=https://stedelijkonderwijs.be
-
 ```
+Or have this running on port 4444 some other way.
 
 Initially you'll have to run this twice once with domain for the the baseline content (for example production).
 Once with the domain for comparison (for example acc). 
@@ -94,3 +101,4 @@ the screenshots.
 - Add integration for gherkin based making of screenshots (behat)
 - Improve UI for the results
 - Improve report handling
+- Make dependency on imagemagick clearer
