@@ -92,7 +92,7 @@ has been added. (Will be expanded further).
     ./vendor/bin/haunt generate-html --source=/ABSOLUTE/PATH/TO/REPORT.json --target=/ABSOLUTE/PATH/TO/OUTPUT/DIR
 ```
 
-This will generate a set of (currently very basic html files to display
+This will generate a set of (currently very basic) html files to display
 the screenshots.
 
 ## Roadmap
