@@ -81,7 +81,7 @@ To compare screenshots the following dir structure is required.
 Afterwards you can run haunt and a new file "diff.png" will be added highlighting 
 the differences between the 2 files. 
 Also a report.json file will have been made in the source dir (this can 
-then be uses by any output generator). 
+then be used by any output generator). 
 
 ``` 
     ./vendor/bin/haunt compare --source=WHEREVER
