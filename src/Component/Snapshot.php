@@ -95,9 +95,16 @@ class Snapshot {
 
   /**
    * Make snapshots for all the items locations.
+   *
+   * @param string $browserName
+   *   Name for the browser (defaults to firefox).
+   * @param array|null $desiredCapabilities
+   *   Desired capabilities.
+   * @param string $wdHost
+   *   Host for the hub.
    */
-  public function snap() {
-    $session = new Session(new Selenium2Driver());
+  public function snap($browserName = 'firefox', $desiredCapabilities = NULL, $wdHost = 'http://localhost:4444/wd/hub') {
+    $session = new Session(new Selenium2Driver($browserName, $desiredCapabilities, $wdHost));
     $session->start();
 
     $fs = new Filesystem();

@@ -43,6 +43,13 @@ class SnapshotSeleniumCommand extends Command {
   protected $config = [];
 
   /**
+   * Browser to use.
+   *
+   * @var string
+   */
+  protected $browser = 'firefox';
+
+  /**
    * @inheritdoc
    */
   protected function configure() {
@@ -51,6 +58,7 @@ class SnapshotSeleniumCommand extends Command {
       ->addOption('domain', NULL, InputOption::VALUE_REQUIRED, 'The domain to take the snapshots from.')
       ->addOption('target', NULL, InputOption::VALUE_REQUIRED, 'The type of snapshots to make (either baseline or new).', 'new')
       ->addOption('output-dir', NULL, InputOption::VALUE_REQUIRED, 'The base location for the generated snapshots.', getcwd() . '/haunt/snapshots')
+      ->addOption('browser', NULL, InputOption::VALUE_REQUIRED, 'The browser to use for the snapshots' ,'firefox')
       ->setDescription('Use a selenium browser to produce a set of snapshots based on a yml config file.');
   }
 
@@ -75,7 +83,7 @@ class SnapshotSeleniumCommand extends Command {
     }
 
     $outputDir = $input->getOption('output-dir');
-
+    $browser = $input->getOption('browser');
     $configFile = $input->getOption('config');
 
     // Add loading of the file here.
@@ -93,6 +101,7 @@ class SnapshotSeleniumCommand extends Command {
     $this->setOutputDir($outputDir);
     $this->setTargetFile($target . '.png');
     $this->setDomain($domain);
+    $this->setBrowser($browser);
   }
 
   /**
@@ -130,7 +139,7 @@ class SnapshotSeleniumCommand extends Command {
     }
 
     foreach ($snapshotSets as $snapshotSet) {
-      $snapshotSet->snap();
+      $snapshotSet->snap($this->getBrowser());
     }
   }
 
@@ -218,5 +227,19 @@ class SnapshotSeleniumCommand extends Command {
    */
   public function setConfig(array $config) {
     $this->config = $config;
+  }
+
+  /**
+   * @return string
+   */
+  public function getBrowser() {
+    return $this->browser;
+  }
+
+  /**
+   * @param $browser
+   */
+  public function setBrowser($browser) {
+    $this->browser = $browser;
   }
 }
