@@ -87,6 +87,13 @@ class ManifestItemVariationLine implements ManifestItemVariationLineInterface {
   /**
    * {@inheritdoc}
    */
+  public function getSizeInfo() {
+    return $this->sizeInfo;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getParent() {
     return $this->parent;
   }

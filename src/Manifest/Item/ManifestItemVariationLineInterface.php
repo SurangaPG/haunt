@@ -29,6 +29,14 @@ interface ManifestItemVariationLineInterface {
   public function getSize();
 
   /**
+   * Array of data with the size of the browser window.
+   *
+   * @return array
+   *   Array containing the width and height keys.
+   */
+  public function getSizeInfo();
+
+  /**
    * Simple identifier information for the visitor.
    *
    * @return array

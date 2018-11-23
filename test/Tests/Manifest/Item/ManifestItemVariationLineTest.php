@@ -55,6 +55,20 @@ class ManifestItemVariationLineTest extends TestCase {
   }
 
   /**
+   * @covers \surangapg\Haunt\Manifest\Item\ManifestItemVariationLine::getSizeInfo
+   */
+  public function testGetSizeInfo() {
+    $manifestItem = $this->getMockBuilder('surangapg\Haunt\Manifest\Item\ManifestItem')
+      ->setConstructorArgs(['test-uri'])
+      ->setMethods(['getUri'])
+      ->getMock();
+    $manifestItem->method('getUri')->willReturn('test-uri');
+    $manifestItemVariationLine = new ManifestItemVariationLine('anonymous', 'lg', ['width' => 300, 'height' => 200], $manifestItem);
+
+    $this->assertEquals(['width' => 300, 'height' => 200], $manifestItemVariationLine->getSizeInfo());
+  }
+
+  /**
    * @covers \surangapg\Haunt\Manifest\Item\ManifestItemVariationLine::getParent
    */
   public function testGetParent() {
