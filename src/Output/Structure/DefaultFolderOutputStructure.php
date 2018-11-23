@@ -31,39 +31,25 @@ class DefaultFolderOutputStructure implements OutputStructureInterface {
     $this->folderRoot = $folderRoot;
   }
 
-  public function writeOutputFile(ManifestItemVariationLineInterface $manifestItemVariation, $fileData) {
-
-  }
-
-  public function findOutputFile(ManifestItemVariationLineInterface $manifestItemVariation) {
-
-  }
-
-  public function hasOutputFile(ManifestItemVariationLineInterface $manifestItemVariation) {
-
-  }
-
-  public function generateOutputFileLocation(ManifestItemVariationLineInterface $manifestItemVariation) {
-
+  /**
+   * {@inheritdoc}
+   */
+  public function hasOutput(ManifestItemVariationLineInterface $manifestItemVariation) {
+    return file_exists($this->generateOutputName($manifestItemVariation));
   }
 
   /**
-   * Get the root folder.
-   *
-   * @return string
-   *   The folder root.
+   * {@inheritdoc}
    */
-  public function getFolderRoot(): string {
+  public function generateOutputName(ManifestItemVariationLineInterface $manifestItemVariation) {
+    return rtrim($this->folderRoot, '/') . '/' . base64_encode($manifestItemVariation->getUri()) . '/' . $manifestItemVariation->getVisitor() . '/' . $manifestItemVariation->getSize() .'/screenshot.png';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFolderRoot() {
     return $this->folderRoot;
   }
 
-  /**
-   * Set the root folder.
-   *
-   * @param string $folderRoot
-   *   The folder root.
-   */
-  public function setFolderRoot(string $folderRoot) {
-    $this->folderRoot = $folderRoot;
-  }
 }
