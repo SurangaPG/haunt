@@ -33,4 +33,5 @@ class ComparisonOutput implements HtmlGeneratorInterface {
 
     return $files;
   }
+
 }
