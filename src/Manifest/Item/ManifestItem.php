@@ -3,7 +3,7 @@
 namespace surangapg\Haunt\Manifest\Item;
 
 /**
-
+ * Represents a single item in a manifest.
  */
 class ManifestItem implements ManifestItemInterface  {
 
@@ -30,6 +30,20 @@ class ManifestItem implements ManifestItemInterface  {
    *   Metadata about the visitors.
    */
   protected $visitorVariations;
+
+  /**
+   * ManifestItem constructor.
+   *
+   * @param string $uri
+   *   The base uri to visit.
+   * @param array $data
+   *   All the data for the manifest item.
+   */
+  public function __construct(string $uri, array $data = []) {
+    $this->uri = $uri;
+    $this->sizeVariations = isset($data['sizes']) ? $data['sizes'] : ['default' => ['width' => 1200, 'height' => 800]];
+    $this->visitorVariations = isset($data['visitors']) ? $data['visitors'] : ['default'];
+  }
 
   /**
    * @inheritdoc}

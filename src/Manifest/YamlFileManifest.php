@@ -36,7 +36,7 @@ class YamlFileManifest implements ManifestInterface {
 
     $items = [];
     foreach ($this->parseData($this->readFile()) as $item) {
-      $items[] = new ManifestItem($item);
+      $items[] = new ManifestItem($item['uri'], $item);
     }
 
     return $items;
@@ -81,12 +81,12 @@ class YamlFileManifest implements ManifestInterface {
       foreach ($rawData['paths'] as $path) {
         if (is_string($path)) {
           $parsed = $defaultVariations;
-          $parsed['path'] = $path;
+          $parsed['uri'] = $path;
           $parsedData[] = $parsed;
         }
         else {
-          if (!isset($path['path'])) {
-            throw new \Exception('The "path" key is required');
+          if (!isset($path['uri'])) {
+            throw new \Exception('The "uri" key is required');
           }
           $parsedData[] = $path;
         }

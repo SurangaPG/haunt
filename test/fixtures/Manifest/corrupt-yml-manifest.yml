@@ -8,15 +8,15 @@ default_variations:
     sm:
       width: 578
       height: 1200
-    users:
+    visitors:
     - anonymous
     - webmaster_karel
 paths:
   - '/node/1'
   - '/node/2'
   -
-    path: '/',
-    users:
+    uri: '/',
+    visitors:
       - webmaster_karel
 - '/ophaalpunten'
   - '/alles-over-klein-chemisch-afval'

@@ -37,6 +37,7 @@ class YamlFileManifestTest extends TestCase {
     $items = $manifest->listManifestItems();
 
     $this->assertCount(6, $items);
+    $this->assertContainsOnlyInstancesOf('surangapg\Haunt\Manifest\Item\ManifestItemInterface', $items);
   }
 
   /**
@@ -73,7 +74,7 @@ class YamlFileManifestTest extends TestCase {
             'width' => 10,
           ],
         ],
-        'users' => [
+        'visitors' => [
           'anonymous',
         ],
       ],
@@ -88,13 +89,13 @@ class YamlFileManifestTest extends TestCase {
 
     $this->assertCount(2, $parsedData, "2 items should have been detected in the raw data.");
 
-    $this->assertEquals('/', $parsedData[0]['path'], "The path key should be correct.");
+    $this->assertEquals('/', $parsedData[0]['uri'], "The path key should be correct.");
     $this->assertCount(2, $parsedData[0]['sizes'], "The 'sizes' key should have matched the default variations.");
-    $this->assertCount(1, $parsedData[0]['users'], "The 'users' key should have matched the default variations.");
+    $this->assertCount(1, $parsedData[0]['visitors'], "The 'users' key should have matched the default variations.");
 
-    $this->assertEquals('/contact', $parsedData[1]['path'], "The path key should be correct.");
+    $this->assertEquals('/contact', $parsedData[1]['uri'], "The path key should be correct.");
     $this->assertCount(2, $parsedData[1]['sizes'], "The 'sizes' key should have matched the default variations.");
-    $this->assertCount(1, $parsedData[1]['users'], "The 'users' key should have matched the default variations.");
+    $this->assertCount(1, $parsedData[1]['visitors'], "The 'users' key should have matched the default variations.");
 
   }
 
@@ -118,20 +119,20 @@ class YamlFileManifestTest extends TestCase {
             'width' => 10,
           ],
         ],
-        'users' => [
+        'visitors' => [
           'anonymous',
         ],
       ],
       'paths' => [
         [
-          'path' => '/',
+          'uri' => '/',
           'sizes' => [
             'sm' => [
               'height' => 10,
               'width' => 10,
             ],
           ],
-          'users' => [
+          'visitors' => [
             'anonymous',
             'jan',
             'karel',
@@ -148,11 +149,11 @@ class YamlFileManifestTest extends TestCase {
 
     $this->assertCount(1, $parsedData[0]['sizes'], "The 'sizes' key should have matched the variation.");
     $this->assertArrayHasKey('sm', $parsedData[0]['sizes'], "The 'sizes' key should have matched the variation.");
-    $this->assertEquals('/', $parsedData[0]['path'], "The path key should be correct.");
-    $this->assertCount(3, $parsedData[0]['users'], "The 'users' key should have matched the variation.");
+    $this->assertEquals('/', $parsedData[0]['uri'], "The path key should be correct.");
+    $this->assertCount(3, $parsedData[0]['visitors'], "The 'users' key should have matched the variation.");
 
     $this->assertCount(2, $parsedData[1]['sizes'], "The 'sizes' key should have matched the default variations.");
-    $this->assertCount(1, $parsedData[1]['users'], "The 'users' key should have matched the default variations.");
+    $this->assertCount(1, $parsedData[1]['visitors'], "The 'users' key should have matched the default variations.");
   }
 
 }
