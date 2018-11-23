@@ -7,7 +7,6 @@ namespace surangapg\Haunt\Generator;
 
 use Behat\Mink\Driver\Selenium2Driver;
 use Behat\Mink\Session;
-use surangapg\Haunt\Manifest\Item\ManifestItemInterface;
 use surangapg\Haunt\Manifest\Item\ManifestItemVariationLineInterface;
 use surangapg\Haunt\Manifest\ManifestInterface;
 use surangapg\Haunt\Output\Structure\OutputStructureInterface;
