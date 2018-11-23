@@ -5,8 +5,6 @@
 
 namespace surangapg\Haunt\Command;
 
-use Behat\Mink\Session;
-use surangapg\Haunt\Component\Snapshot;
 use surangapg\Haunt\Generator\SnapshotGenerator;
 use surangapg\Haunt\Manifest\YamlFileManifest;
 use surangapg\Haunt\Output\Structure\DefaultFolderOutputStructure;
@@ -14,22 +12,22 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
 
 class SnapshotSeleniumCommand extends Command {
 
   /**
-   * @var Session
-   */
-  protected $session;
-
-  /**
+   * The base url for the domain to check.
+   *
    * @var string
+   *   The domain to check.
    */
   protected $domain;
 
   /**
+   * The directory location for the output.
+   *
    * @var string
+   *   Absolute path for the output dir.
    */
   protected $outputDir;
 
@@ -37,6 +35,7 @@ class SnapshotSeleniumCommand extends Command {
    * Configuration for the snapshot run.
    *
    * @var string
+   *   The location for the manifest file.
    */
   protected $manifest;
 
@@ -44,6 +43,7 @@ class SnapshotSeleniumCommand extends Command {
    * Browser to use.
    *
    * @var string
+   *   The name for the browser to use.
    */
   protected $browser = 'firefox';
 
@@ -111,13 +111,6 @@ class SnapshotSeleniumCommand extends Command {
     }
 
     return $active;
-  }
-
-  /**
-   * @return Session
-   */
-  public function getSession() {
-    return $this->session;
   }
 
   /**
