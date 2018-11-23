@@ -7,12 +7,12 @@ use surangapg\Haunt\Manifest\Item\ManifestItem;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class YmlFileManifest
+ * Class YamlFileManifest
  *
  * Reads in the data from a yaml file. Allowing it to be stored on the file
  * system.
  */
-class YmlFileManifest implements ManifestInterface {
+class YamlFileManifest implements ManifestInterface {
 
   /**
    * Construction time config.
@@ -65,6 +65,8 @@ class YmlFileManifest implements ManifestInterface {
    *   If the data could not be read.
    * @throws \Symfony\Component\Yaml\Exception\ParseException
    *   If the yaml data was not correct.
+   * @throws \Exception
+   *   If a data item was invalid.
    *
    * @return array
    *   The data in completed chunks.
@@ -73,6 +75,23 @@ class YmlFileManifest implements ManifestInterface {
     $this->checkConfig();
 
     $parsedData = [];
+    $defaultVariations = isset($rawData['default_variations']) ? $rawData['default_variations'] : [];
+
+    if (isset($rawData['paths'])) {
+      foreach ($rawData['paths'] as $path) {
+        if (is_string($path)) {
+          $parsed = $defaultVariations;
+          $parsed['path'] = $path;
+          $parsedData[] = $parsed;
+        }
+        else {
+          if (!isset($path['path'])) {
+            throw new \Exception('The "path" key is required');
+          }
+          $parsedData[] = $path;
+        }
+      }
+    }
 
     return $parsedData;
   }
@@ -86,7 +105,7 @@ class YmlFileManifest implements ManifestInterface {
    * @return array
    *   The data in the file.
    */
-  public function readFile() {
+  protected function readFile() {
     return Yaml::parse(file_get_contents($this->config['file']));
   }
 }

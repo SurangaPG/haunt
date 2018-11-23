@@ -15,7 +15,7 @@ paths:
   - '/node/1'
   - '/node/2'
   -
-    uri: '/',
+    path: '/'
     users:
       - webmaster_karel
   - '/ophaalpunten'
