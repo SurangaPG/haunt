@@ -36,4 +36,12 @@ interface ManifestItemInterface {
    */
   public function getVisitorVariations();
 
+  /**
+   * Generate a list for all the variations.
+   *
+   * @return \surangapg\Haunt\Manifest\Item\ManifestItemVariationLineInterface[]
+   *   All the variations for the manifest item.
+   */
+  public function listVariations();
+
 }
