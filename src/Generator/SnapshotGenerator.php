@@ -70,7 +70,14 @@ class SnapshotGenerator {
   protected $baseUrl;
 
   /**
-   * Snapshot constructor.
+   * SnapshotGenerator constructor.
+   *
+   * @param \surangapg\Haunt\Manifest\ManifestInterface $manifest
+   *   The manifest with all the expected items.
+   * @param \surangapg\Haunt\Output\Structure\OutputStructureInterface $outputStructure
+   *   The structure for the output.
+   * @param \Symfony\Component\Console\Output\OutputInterface|NULL $output
+   *   The output item to provide output to the user.
    */
   public function __construct(ManifestInterface $manifest, OutputStructureInterface $outputStructure, OutputInterface $output = NULL) {
     if (!isset($output)) {
