@@ -104,21 +104,17 @@ class SnapshotGenerator {
     $this->baseUrl = rtrim($baseUrl, '/') . '/';
 
     foreach ($this->manifest->listManifestItems() as $item) {
-      $this->handleManifestItem($item);
+      foreach ($item->listVariations() as $variation) {
+        $this->handleManifestItemVariation($variation);
+      }
     }
   }
 
   /**
-   * @param \surangapg\Haunt\Manifest\Item\ManifestItemInterface $item
-   */
-  protected function handleManifestItem(ManifestItemInterface $item) {
-    foreach ($item->listVariations() as $variation) {
-      $this->handleManifestItemVariation($variation);
-    }
-  }
-
-  /**
+   * Handle a single variation for a manifest item.
+   *
    * @param \surangapg\Haunt\Manifest\Item\ManifestItemVariationLineInterface $variation
+   *   The variation to handle.
    */
   protected function handleManifestItemVariation(ManifestItemVariationLineInterface $variation) {
     $resolution = $variation->getSizeInfo();
