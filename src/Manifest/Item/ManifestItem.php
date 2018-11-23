@@ -32,6 +32,14 @@ class ManifestItem implements ManifestItemInterface  {
   protected $visitorVariations;
 
   /**
+   * All the variation items.
+   *
+   * @var \surangapg\Haunt\Manifest\Item\ManifestItemVariationLineInterface[]
+   *   All the generated variations.
+   */
+  protected $variations;
+
+  /**
    * ManifestItem constructor.
    *
    * @param string $uri
@@ -43,6 +51,20 @@ class ManifestItem implements ManifestItemInterface  {
     $this->uri = $uri;
     $this->sizeVariations = isset($data['sizes']) ? $data['sizes'] : ['default' => ['width' => 1200, 'height' => 800]];
     $this->visitorVariations = isset($data['visitors']) ? $data['visitors'] : ['default'];
+  }
+
+  /**
+   * @inheritdoc}
+   */
+  public function listVariations() {
+    if (empty($this->variations)) {
+      foreach ($this->getSizeVariations() as $sizeVariationKey => $sizeInfo) {
+        foreach ($this->getVisitorVariations() as $visitorVariation) {
+          $this->variations[] = new ManifestItemVariationLine($visitorVariation, $sizeVariationKey, $sizeInfo, $this);
+        }
+      }
+    }
+    return $this->variations;
   }
 
   /**

@@ -46,6 +46,30 @@ class ManifestItemTest extends TestCase {
     $this->assertEquals(['lg' => ['width' => 800, 'height' => 300]], $manifestItem->getSizeVariations());
     $this->assertEquals(['jan-met-de-pet'], $manifestItem->getVisitorVariations());
   }
-  
+
+  /**
+   * @covers \surangapg\Haunt\Manifest\Item\ManifestItem::listVariations
+   */
+  public function testListVariations() {
+    // Check basic setting of data.
+    $data = [
+      'sizes' => [
+        'lg' => [
+          'width' => 800,
+          'height' => 300,
+        ],
+      ],
+      'visitors' => [
+        'jan-met-de-pet'
+      ],
+    ];
+
+    $manifestItem = new ManifestItem('test-uri', $data);
+
+    $variations = $manifestItem->listVariations();
+    $this->assertContainsOnlyInstancesOf('surangapg\Haunt\Manifest\Item\ManifestItemVariationLineInterface', $variations);
+    $this->assertCount(1, $variations);
+  }
+
 }
 

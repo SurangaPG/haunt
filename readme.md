@@ -105,3 +105,8 @@ the screenshots.
 - Improve UI for the results
 - Improve report handling
 - Make dependency on imagemagick clearer
+
+2.x Class structure 
+
+Manifest --> Lists everything 
+Camera --> Takes manifest --> Makes snapshot --> OutputStructure --> Location
