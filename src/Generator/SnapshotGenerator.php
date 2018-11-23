@@ -88,6 +88,12 @@ class SnapshotGenerator {
    *
    * @param string $baseUrl
    *   The base url to visit.
+   * @param string $browserName
+   *   Name for the browser to use (defaults to firefox).
+   * @param array|null $desiredCapabilities
+   *   All the capabilities for the driver.
+   * @param string $wdHost
+   *   The host for the driver.
    */
   public function generate(string $baseUrl, $browserName = 'firefox', $desiredCapabilities = NULL, $wdHost = 'http://localhost:4444/wd/hub') {
 
