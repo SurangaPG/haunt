@@ -17,7 +17,7 @@ class DefaultFolderOutputStructureTest extends TestCase {
    */
   public function testHasOutput() {
 
-    $fixtureRoot = dirname(dirname(dirname(dirname(__DIR__)))) . '/fixtures/output-structure-test';
+    $fixtureRoot = dirname(dirname(dirname(__DIR__))) . '/fixtures/output-structure-test';
 
     $manifestItemVariation = $this->getMockBuilder('surangapg\Haunt\Manifest\Item\ManifestItemVariationLine')
       ->disableOriginalConstructor()
