@@ -48,12 +48,21 @@ class SnapshotSeleniumCommand extends Command {
   protected $browser = 'firefox';
 
   /**
+   * The name for this dataset.
+   *
+   * @var string
+   *   The name for this comparison.
+   */
+  protected $metaName;
+
+  /**
    * @inheritdoc
    */
   protected function configure() {
     $this->setName('snapshots:selenium')
       ->addOption('manifest', NULL, InputOption::VALUE_REQUIRED, 'The manifest file to use.')
       ->addOption('domain', NULL, InputOption::VALUE_REQUIRED, 'The domain to take the snapshots from.')
+      ->addOption('meta-name', NULL, InputOption::VALUE_REQUIRED, 'The name for this comparison.')
       ->addOption('output-dir', NULL, InputOption::VALUE_REQUIRED, 'The base location for the generated snapshots.', getcwd() . '/haunt/new_snapshots')
       ->addOption('browser', NULL, InputOption::VALUE_REQUIRED, 'The browser to use for the snapshots' ,'firefox')
       ->setDescription('Use a selenium browser to produce a set of snapshots based on a yml config file.');
@@ -77,8 +86,12 @@ class SnapshotSeleniumCommand extends Command {
     $outputDir = $input->getOption('output-dir');
     $browser = $input->getOption('browser');
     $manifestFile = $input->getOption('manifest');
+    $metaName =  $input->getOption('meta-name');
 
     $this->setManifest($manifestFile);
+    $outputDir = rtrim($outputDir, '/');
+
+    $this->setMetaName($metaName);
     $this->setOutputDir($outputDir);
     $this->setDomain($domain);
     $this->setBrowser($browser);
@@ -90,11 +103,17 @@ class SnapshotSeleniumCommand extends Command {
   public function execute(InputInterface $input, OutputInterface $output) {
     // Generate a manifest.
     $manifest = new YamlFileManifest(['file' => $this->getManifest()]);
-    $outputStructure = new DefaultFolderOutputStructure($this->getOutputDir());
+    $outputStructure = new DefaultFolderOutputStructure($this->getOutputDir() . '/' . $this->metaName);
+
+    $metaInfo = [
+      'name' => $this->metaName,
+      'timeStamp' => time(),
+      'time' => date('d/m/Y - H:i'),
+    ];
 
     $snapshotGenerator = new SnapshotGenerator($manifest, $outputStructure, $output);
 
-    $snapshotGenerator->generate($this->getDomain());
+    $snapshotGenerator->generate($this->getDomain(), $metaInfo);
   }
 
   /**
@@ -142,6 +161,13 @@ class SnapshotSeleniumCommand extends Command {
   }
 
   /**
+   * @return string
+   */
+  public function getMetaName() {
+    return $this->metaName;
+  }
+
+  /**
    * @param string $outputDir
    */
   public function setOutputDir(string $outputDir) {
@@ -161,6 +187,14 @@ class SnapshotSeleniumCommand extends Command {
   public function setManifest(string $manifest) {
     $this->manifest = $manifest;
   }
+
+  /**
+   * @param string $metaName
+   */
+  public function setMetaName(string $metaName) {
+    $this->metaName = $metaName;
+  }
+
 
   /**
    * @return string

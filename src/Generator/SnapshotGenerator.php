@@ -13,6 +13,7 @@ use surangapg\Haunt\Output\Structure\OutputStructureInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class Snapshot
@@ -94,6 +95,8 @@ class SnapshotGenerator {
    *
    * @param string $baseUrl
    *   The base url to visit.
+   * @param array $metaInfo
+   *   Array with some information about the meta data for this run.
    * @param string $browserName
    *   Name for the browser to use (defaults to firefox).
    * @param array|null $desiredCapabilities
@@ -101,7 +104,7 @@ class SnapshotGenerator {
    * @param string $wdHost
    *   The host for the driver.
    */
-  public function generate(string $baseUrl, $browserName = 'firefox', $desiredCapabilities = NULL, $wdHost = 'http://localhost:4444/wd/hub') {
+  public function generate(string $baseUrl, array $metaInfo = [], $browserName = 'firefox', $desiredCapabilities = NULL, $wdHost = 'http://localhost:4444/wd/hub') {
 
     $this->session = new Session(new Selenium2Driver($browserName, $desiredCapabilities, $wdHost));
     $this->session->start();
@@ -117,6 +120,10 @@ class SnapshotGenerator {
         $this->handleManifestItemVariation($variation);
       }
     }
+
+    // Write out a small meta file.
+    $metaInfo['domain'] = $this->baseUrl;
+    $this->fs->dumpFile($this->outputStructure->getFolderRoot() . '/meta.yml', Yaml::dump($metaInfo));
   }
 
   /**

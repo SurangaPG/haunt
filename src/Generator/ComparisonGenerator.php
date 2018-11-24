@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file Component responsible for discovery of all the comparable screenshots.
+ * @file Generator to for all the comparison png's and diff percentages.
  */
 namespace surangapg\Haunt\Generator;
 
