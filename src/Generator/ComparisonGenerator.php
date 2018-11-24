@@ -49,7 +49,7 @@ class ComparisonGenerator {
   /**
    * The root output directory.
    *
-   * @var string
+   * @var \surangapg\Haunt\Generator\BufferedOutput|\Symfony\Component\Console\Output\OutputInterface
    *   The directory to output the comparison files to.
    */
   protected $outputDir;
@@ -79,27 +79,21 @@ class ComparisonGenerator {
    *   Reference data output.
    * @param \surangapg\Haunt\Output\Structure\OutputStructureInterface $new
    *   The new screenshot data.
-   * @param string $outputDir
-   *   The directory to output the data to.
+   * @param \surangapg\Haunt\Output\Structure\OutputStructureInterface $outputDir
+   *   The data structure for the comparison data.
    * @param \Symfony\Component\Console\Output\OutputInterface|NULL $output
    *   The output interface.
    */
-  public function __construct(ManifestInterface $manifest, OutputStructureInterface $reference, OutputStructureInterface $new, string $outputDir = '', OutputInterface $output = NULL) {
+  public function __construct(ManifestInterface $manifest, OutputStructureInterface $reference, OutputStructureInterface $new, OutputStructureInterface $outputDir, OutputInterface $output = NULL) {
     if (!isset($output)) {
       $output = new BufferedOutput();
     }
 
     $this->manifest = $manifest;
     $this->output = $output;
+    $this->outputDir = $outputDir;
     $this->reference = $reference;
     $this->new = $new;
-
-    if (empty($outputDir)) {
-      $outputDir = getcwd();
-    }
-
-    $this->outputDir = rtrim($outputDir, '/') . '/';
-    $this->outputDir .= '/' . basename($this->reference->getFolderRoot()) . '--' . basename($this->new->getFolderRoot());
 
   }
 
@@ -118,7 +112,7 @@ class ComparisonGenerator {
     }
 
     // Write out the report to a yaml file.
-    $this->fs->dumpFile($this->outputDir . '/results.yml', Yaml::dump($this->results, 4, 2));
+    $this->fs->dumpFile($this->outputDir->getFolderRoot() . '/results.yml', Yaml::dump($this->results, 4, 2));
   }
 
   /**
@@ -147,10 +141,11 @@ class ComparisonGenerator {
         return;
       }
 
-      $diff =  $this->outputDir . '/' . $variation->uniqueId() . '.png';
+      $diff = $this->outputDir->generateOutputName($variation);
       $reference = $this->reference->generateOutputName($variation);
       $new = $this->new->generateOutputName($variation);
 
+      // Ensure the dir exists to prevent the compare from failing silently.
       if (!$this->fs->exists(dirname($diff))) {
         $this->fs->mkdir(dirname($diff));
       }

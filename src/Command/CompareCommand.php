@@ -43,6 +43,9 @@ class CompareCommand extends Command {
     $manifest = new YamlFileManifest(['file' => $manifest]);
 
     $outputDir = $input->getOption('output-dir');
+    $outputDir = rtrim($outputDir, '/') . '/';
+    $outputDir .= '/' . basename($referenceData->getFolderRoot()) . '--' . basename($newData->getFolderRoot());
+    $outputDir = new DefaultFolderOutputStructure($outputDir);
 
     $comparisonGenerator = new ComparisonGenerator($manifest, $referenceData, $newData, $outputDir, $output);
     $comparisonGenerator->generate();
