@@ -1,0 +1,41 @@
+<html>
+<head>
+    <title>Visual Regression - Comparison </title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+    <!-- Cycle JS -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.cycle/3.03/jquery.cycle.all.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <!-- Scroll to plugin -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.0/jquery.scrollTo.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+
+</head>
+
+<body>
+<div class="container">
+    <h1>Hihihi</h1>
+
+    {% for item in analysis.listItems() %}
+        <ul>
+            <li>Missing: {{ item.getMissingComparisons() }}</li>
+            <li>Failed: {{ item.getFailedComparisons() }}</li>
+            <li>Changed: {{ item.getChangedComparisons() }}</li>
+            <li>Unchanged: {{ item.getUnchangedComparisons() }}</li>
+        </ul>
+    {% endfor %}
+
+</div>
+</body>
+</html>

@@ -10,9 +10,22 @@ use surangapg\Haunt\Manifest\Item\ManifestItemVariationLineInterface;
  * Interface to structure detect the output from manifest items on a file
  * system.
  *
+ * @TODO Every one of these sets has a meta.yml in the root. Accessing this
+ * should be done via this interface.
+ *
  * @package surangapg\Haunt\Output\Structure
  */
 interface OutputStructureInterface {
+
+  /**
+   * Gets all the metadata about this output.
+   *
+   * @TODO Untested.
+   *
+   * @return array
+   *   Get all the metadata for this item.
+   */
+  public function getMetaData();
 
   /**
    * Checks or output exists for this item.
@@ -40,4 +53,12 @@ interface OutputStructureInterface {
    *   The folder root.
    */
   public function getFolderRoot();
+
+  /**
+   * Get the folder root.
+   *
+   * @param string $root
+   *   Sets the folder root.
+   */
+  public function setFolderRoot(string $root);
 }

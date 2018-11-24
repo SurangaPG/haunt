@@ -5,8 +5,10 @@
 
 namespace surangapg\Haunt\Command;
 
-use surangapg\Haunt\Component\Html;
-use surangapg\Haunt\Output\ComparisonOutput;
+use surangapg\Haunt\Analysis\ComparisonAnalysis;
+use surangapg\Haunt\Generator\ArtifactGenerator;
+use surangapg\Haunt\Manifest\YamlFileManifest;
+use surangapg\Haunt\Output\Structure\DefaultFolderOutputStructure;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -19,30 +21,40 @@ class ArtifactCommand extends Command {
    */
   protected function configure() {
     $this->setName('artifact')
+      ->addOption('reference', NULL, InputOption::VALUE_REQUIRED, 'The directory where the source files are located.', getcwd() . '/haunt/snapshots/reference')
+      ->addOption('new', NULL, InputOption::VALUE_REQUIRED, 'The directory where the source files are located.', getcwd() . '/haunt/snapshots/new')
+      ->addOption('comparison', NULL, InputOption::VALUE_REQUIRED, 'The directory to output the comparison to..', getcwd() . '/haunt/results')
+      ->addOption('manifest', NULL, InputOption::VALUE_REQUIRED, 'The manifest file to use.')
+      ->addOption('artifact-dir', NULL, InputOption::VALUE_REQUIRED, 'The directory to put the artifact in.')
       ->setDescription('Generate static html output of a given type.');
   }
 
   /**
    * @inheritdoc
    */
-  public function initialize(InputInterface $input, OutputInterface $output) {
-    parent::initialize($input, $output);
-
-    $source = $input->getOption('source');
-    if (!isset($source)) {
-      throw new \Exception('Source option is required.');
-    }
-
-    if (!file_exists($source)) {
-      throw new \Exception(sprintf('Source file %s doesn\'t exist. You can specify one (absolute path only currently) via --source.', $source));
-    }
-  }
-
-  /**
-   * @inheritdoc
-   */
   public function execute(InputInterface $input, OutputInterface $output) {
-    $output->writeln('Generating static html');
 
+    $currentDir = $input->getOption('reference');
+    $referenceData = new DefaultFolderOutputStructure($currentDir);
+
+    $newDir = $input->getOption('new');
+    $newData = new DefaultFolderOutputStructure($newDir);
+
+    $manifest = $input->getOption('manifest');
+    $manifest = new YamlFileManifest(['file' => $manifest]);
+
+    $comparison = $input->getOption('comparison');
+    $comparison = rtrim($comparison, '/') . '/';
+    $comparison .= '/' . basename($referenceData->getFolderRoot()) . '--' . basename($newData->getFolderRoot());
+    $comparison = new DefaultFolderOutputStructure($comparison);
+
+    $artifactDir = $input->getOption('artifact-dir');
+
+    $analysis = new ComparisonAnalysis($manifest, $referenceData, $newData, $comparison);
+    $analysis->listItems();
+
+    // @TODO Make the type of artifact swappable.
+    $artifactGenerator = new ArtifactGenerator($analysis, $artifactDir, $output);
+    $artifactGenerator->generate();
   }
 }

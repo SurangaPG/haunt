@@ -3,6 +3,7 @@
 namespace surangapg\Haunt\Output\Structure;
 
 use surangapg\Haunt\Manifest\Item\ManifestItemVariationLineInterface;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class DefaultFolderOutputStructure
@@ -34,6 +35,17 @@ class DefaultFolderOutputStructure implements OutputStructureInterface {
   /**
    * {@inheritdoc}
    */
+  public function getMetaData() {
+    if (!file_exists($this->getFolderRoot() . '/meta.yml')) {
+      return [];
+    }
+
+    return Yaml::parse(file_get_contents($this->getFolderRoot() . '/meta.yml'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function hasOutput(ManifestItemVariationLineInterface $manifestItemVariation) {
     return file_exists($this->generateOutputName($manifestItemVariation));
   }
@@ -50,6 +62,16 @@ class DefaultFolderOutputStructure implements OutputStructureInterface {
    */
   public function getFolderRoot() {
     return $this->folderRoot;
+  }
+
+  /**
+   * Get the folder root.
+   *
+   * @param string $root
+   *   Sets the folder root.
+   */
+  public function setFolderRoot(string $root) {
+    $this->folderRoot = $root;
   }
 
 }

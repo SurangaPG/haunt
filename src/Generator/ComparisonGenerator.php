@@ -103,6 +103,12 @@ class ComparisonGenerator {
   public function generate() {
     $this->fs = new Filesystem();
 
+    $this->results = [
+      'name' => 'generated comparison',
+      'timeStamp' => time(),
+      'time' => date('d/m/Y - H:i'),
+    ];
+
     $this->getOutput()->writeln('<fg=yellow>Comparing snapshots</>');
     foreach ($this->manifest->listManifestItems() as $item) {
       $this->getOutput()->writeln(sprintf('   Comparing <fg=white>%s</> - %s variations', $item->getUri(), count($item->listVariations())));
@@ -112,7 +118,7 @@ class ComparisonGenerator {
     }
 
     // Write out the report to a yaml file.
-    $this->fs->dumpFile($this->outputDir->getFolderRoot() . '/results.yml', Yaml::dump($this->results, 4, 2));
+    $this->fs->dumpFile($this->outputDir->getFolderRoot() . '/meta.yml', Yaml::dump($this->results, 4, 2));
   }
 
   /**
