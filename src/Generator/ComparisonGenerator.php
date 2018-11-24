@@ -140,6 +140,10 @@ class ComparisonGenerator {
 
       if ($referenceResolution != $newResolution) {
         $this->getOutput()->writeln('      <fg=red>Image dimensions do not match.</>');
+        $this->results['comparisons'][$variation->uniqueId()] = [
+          'comparison' => TRUE,
+          'error' => 'Dimensions do not match.',
+        ];
         return;
       }
 
@@ -158,12 +162,17 @@ class ComparisonGenerator {
       $this->output->writeln(sprintf('      Difference: %s', $this->formatPercentage($diffPercentage)));
 
       $this->results['comparisons'][$variation->uniqueId()] = [
+        'comparison' => TRUE,
         'diff' => $diffPercentage,
         'uri' => $variation->getUri(),
         'id' => $variation->uniqueId(),
       ];
     }
     else {
+      $this->results['comparisons'][$variation->uniqueId()] = [
+        'comparison' => TRUE,
+        'error' => 'Snapshot is not available for both sets.',
+      ];
       $this->getOutput()->writeln('      <fg=red>Snapshot is not available for both sets.</>');
     }
   }
