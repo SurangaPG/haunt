@@ -109,7 +109,10 @@ class SnapshotGenerator {
     $this->fs = new Filesystem();
     $this->baseUrl = rtrim($baseUrl, '/') . '/';
 
+    $this->getOutput()->writeln('<fg=yellow>Generating snapshots</>');
+    $this->getOutput()->writeln(sprintf(' Found <fg=white>%s</> items in the manifest', count($this->manifest->listManifestItems())));
     foreach ($this->manifest->listManifestItems() as $item) {
+      $this->getOutput()->writeln(sprintf('   Checking <fg=white>%s</> - %s variations', $item->getUri(), count($item->listVariations())));
       foreach ($item->listVariations() as $variation) {
         $this->handleManifestItemVariation($variation);
       }
@@ -133,7 +136,18 @@ class SnapshotGenerator {
 
     $this->fs->dumpFile($outputFileName, $screenShot);
 
+    $this->getOutput()->writeln(sprintf('    - Checking: %s at %sx%s', $variation->getVisitor(), $resolution['width'], $resolution['height']));
     passthru('convert ' . $outputFileName . ' -gravity north-west  -extent ' . $resolution['width'] . 'x' . $resolution['height'] . ' ' . $outputFileName);
+  }
+
+  /**
+   * Get the output interface.
+   *
+   * @return \Symfony\Component\Console\Output\BufferedOutput|\Symfony\Component\Console\Output\OutputInterface
+   *   Output interface being used.
+   */
+  public function getOutput() {
+    return $this->output;
   }
 
 }
