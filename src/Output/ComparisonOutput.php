@@ -8,6 +8,8 @@ namespace surangapg\Haunt\Output;
 /**
  * Class ComparisonOutput
  *
+ * @depracated in 2.x
+ *
  * Contains that writes out a fully fledged static comparison ui.
  *
  * @package surangapg\Haunt\Output
